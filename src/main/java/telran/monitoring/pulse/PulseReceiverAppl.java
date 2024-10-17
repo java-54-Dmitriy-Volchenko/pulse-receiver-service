@@ -36,11 +36,8 @@ static Table table = dynamo.getTable("pulse_values");
 		
 		 Level logLevel = Level.parse(LOGGING_LEVEL);
 	        logger.setLevel(logLevel);
-	     //next code only for testing console output   
-	        for (Handler handler : logger.getParent().getHandlers()) {
-	            handler.setLevel(logLevel);
-	        }
-	        // end of testing code
+	        
+	
 
 	        
 	        logger.log(Level.INFO, "Using DynamoDB table: {0}", table.getTableName());
@@ -85,12 +82,10 @@ static Table table = dynamo.getTable("pulse_values");
 	            logger.log(Level.WARNING, "Low pulse: {0}", sensorData);
 	        }
 
-	       
-	        logger.log(Level.FINER, "Putting data for patientId: {0}, timestamp: {1}",
+	       table.putItem(new PutItemSpec().withItem(Item.fromJSON(sensorData.toString())));
+	      
+	       logger.log(Level.FINER, "Putting data for patientId: {0}, timestamp: {1}",
 	                new Object[]{sensorData.patientId(), sensorData.timestamp()});
-
-	       
-	        table.putItem(new PutItemSpec().withItem(Item.fromJSON(sensorData.toString())));
 		
 		
 	}
