@@ -37,17 +37,18 @@ static Table table = dynamo.getTable("pulse_values");
 		 Level logLevel = Level.parse(LOGGING_LEVEL);
 	        logger.setLevel(logLevel);
 	        
-	
-
+	        for (Handler handler : logger.getParent().getHandlers()) {
+	            handler.setLevel(logLevel);
+	        }
 	        
-	        logger.log(Level.INFO, "Using DynamoDB table: {0}", table.getTableName());
-	        logger.log(Level.INFO, "Actual logging level: {0}", LOGGING_LEVEL);
+	        logger.log(Level.INFO, "[INFO] Using DynamoDB table: {0}", table.getTableName());
+	        logger.log(Level.INFO, "[INFO] Actual logging level: {0}", LOGGING_LEVEL);
 	      
-	        logger.log(Level.CONFIG, "LOGGING_LEVEL: {0}", LOGGING_LEVEL);
-	        logger.log(Level.CONFIG, "MAX_THRESHOLD_PULSE_VALUE: {0}", MAX_THRESHOLD_PULSE_VALUE);
-	        logger.log(Level.CONFIG, "MIN_THRESHOLD_PULSE_VALUE: {0}", MIN_THRESHOLD_PULSE_VALUE);
-	        logger.log(Level.CONFIG, "WARN_MAX_PULSE_VALUE: {0}", WARN_MAX_PULSE_VALUE);
-	        logger.log(Level.CONFIG, "WARN_MIN_PULSE_VALUE: {0}", WARN_MIN_PULSE_VALUE);
+	        logger.log(Level.CONFIG, "[CONFIG] LOGGING_LEVEL: {0}", LOGGING_LEVEL);
+	        logger.log(Level.CONFIG, "[CONFIG] MAX_THRESHOLD_PULSE_VALUE: {0}", MAX_THRESHOLD_PULSE_VALUE);
+	        logger.log(Level.CONFIG, "[CONFIG] MIN_THRESHOLD_PULSE_VALUE: {0}", MIN_THRESHOLD_PULSE_VALUE);
+	        logger.log(Level.CONFIG, "[CONFIG] WARN_MAX_PULSE_VALUE: {0}", WARN_MAX_PULSE_VALUE);
+	        logger.log(Level.CONFIG, "[CONFIG] WARN_MIN_PULSE_VALUE: {0}", WARN_MIN_PULSE_VALUE);
 		
 		socket  = new DatagramSocket(PORT);
 		byte [] buffer = new byte[MAX_BUFFER_SIZE];
@@ -69,22 +70,22 @@ static Table table = dynamo.getTable("pulse_values");
 	        SensorData sensorData = SensorData.getSensorData(json);
 
 	       
-	        logger.log(Level.FINE, "Received SensorData: {0}", sensorData);
+	        logger.log(Level.FINE, "[FINE] Received SensorData: {0}", sensorData);
 
 	        
 	        if (sensorData.value() > MAX_THRESHOLD_PULSE_VALUE) {
-	            logger.log(Level.SEVERE, "Critical pulse: {0}", sensorData);
+	            logger.log(Level.SEVERE, "[SEVERE] Critical pulse: {0}", sensorData);
 	        } else if (sensorData.value() < MIN_THRESHOLD_PULSE_VALUE) {
-	            logger.log(Level.SEVERE, "Dangerously low pulse: {0}", sensorData);
+	            logger.log(Level.SEVERE, "[SEVERE] Dangerously low pulse: {0}", sensorData);
 	        } else if (sensorData.value() > WARN_MAX_PULSE_VALUE) {
-	            logger.log(Level.WARNING, "High pulse: {0}", sensorData);
+	            logger.log(Level.WARNING, "[WARNING] High pulse: {0}", sensorData);
 	        } else if (sensorData.value() < WARN_MIN_PULSE_VALUE) {
-	            logger.log(Level.WARNING, "Low pulse: {0}", sensorData);
+	            logger.log(Level.WARNING, "[WARNING] Low pulse: {0}", sensorData);
 	        }
 
 	       table.putItem(new PutItemSpec().withItem(Item.fromJSON(sensorData.toString())));
 	      
-	       logger.log(Level.FINER, "Putting data for patientId: {0}, timestamp: {1}",
+	       logger.log(Level.FINER, "[FINER] Putting data for patientId: {0}, timestamp: {1}",
 	                new Object[]{sensorData.patientId(), sensorData.timestamp()});
 		
 		
