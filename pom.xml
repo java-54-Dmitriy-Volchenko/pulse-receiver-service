@@ -4,56 +4,57 @@
   <artifactId>pulse-receiver-service</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <properties>
-		<maven.compiler.source>17</maven.compiler.source>
-		<maven.compiler.target>17</maven.compiler.target>
-	</properties>
-	<dependencies>
-		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>20240303</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-dynamodb -->
-<dependency>
-    <groupId>com.amazonaws</groupId>
-    <artifactId>aws-java-sdk-dynamodb</artifactId>
-    <version>1.12.773</version>
-</dependency>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20240303</version>
+    </dependency>
+    
+    <!-- AWS SDK для DynamoDB -->
+    <dependency>
+      <groupId>software.amazon.awssdk</groupId>
+      <artifactId>dynamodb</artifactId>
+      <version>2.20.26</version>
+    </dependency>
 
-		<dependency>
-			<groupId>telran.monitoring</groupId>
-			<artifactId>pulse-sender</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-	</dependencies>
-	<build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-jar-plugin</artifactId>
-            <version>3.3.0</version>
-            <!-- Here come other details
-            ...
-            -->
-            <configuration>
-              <archive>
-                <manifest>
-                  <addClasspath>true</addClasspath>
-                  <mainClass>telran.monitoring.pulse.PulseReceiverAppl</mainClass>
-                </manifest>
-              </archive>
-            </configuration>
-            <!-- Here come other details
-            ...
-            -->
-          </plugin>
-          <plugin>
+    <!-- Реализация логгера SLF4J -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>2.0.9</version>
+    </dependency>
+
+    <!-- Зависимость на локальный проект -->
+    <dependency>
+      <groupId>telran.monitoring</groupId>
+      <artifactId>pulse-sender</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.3.0</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <mainClass>telran.monitoring.pulse.PulseReceiverAppl</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
         <version>3.6.0</version>
-        <configuration>
-          <!-- put your configurations here -->
-        </configuration>
         <executions>
           <execution>
             <phase>package</phase>
@@ -63,6 +64,6 @@
           </execution>
         </executions>
       </plugin>
-         </plugins>
-        </build>
+    </plugins>
+  </build>
 </project>
